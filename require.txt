@@ -1,0 +1,28 @@
+1. typescript complire
+2. ts-node
+3. express with typescr express-typescript
+4. nodemon
+5. dotenv
+6. cors
+7. helmet
+8. array 
+
+packages management 
+- npm 
+- yarn workspace  
+- pnpm
+- deno
+
+
+server to run
+--------
+1. port 5000
+
+
+CRUD ENDPOINTS students 
+
+
+Note Import and export
+--------------------------
+export const {Epress }
+export default Express 

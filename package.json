@@ -1,0 +1,35 @@
+{
+  "name": "student_mgn",
+  "version": "1.0.0",
+  "description": "we are going to build student management system",
+  "homepage": "https://github.com/Solvit-Africa-Training-Center/node-js-students-management#readme",
+  "bugs": {
+    "url": "https://github.com/Solvit-Africa-Training-Center/node-js-students-management/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Solvit-Africa-Training-Center/node-js-students-management.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./server.ts",
+    "build":"tsc ./server.ts",
+    "start":"node ./dist/server.js"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.6",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2"
+  }
+}
