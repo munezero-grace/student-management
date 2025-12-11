@@ -4,78 +4,82 @@ import {
   GetStudentIdParamsReq,
   StudentInterface,
 } from "../types";
-import { createUser, getAllUser, findUser } from "../services";
-import { ResponseService } from "../utils";
-import * as zod from "zod";
+import { StudentService } from "../services/students.service";
 import {
-  createStudentValidationSchema,
-  CreateStudentValidationSchemaWithZod,
-} from "../schemas";
-const response = new ResponseService();
-export const createStudent = (req: CreateStudentsRequest, res: Response) => {
-  try {
-    // const { value, error } = createStudentValidationSchema.validate(req.body);
-    // if (error) {
-    //   return res.status(400).json(error);
-    // }
-    const { age, name, isActive } = CreateStudentValidationSchemaWithZod.parse(
-      req.body
-    );
+  HTTP_BAD_REQUEST,
+  HTTP_CREATED,
+  HTTP_NOT_FOUND,
+  HTTP_OK,
+  HTTP_SERVER_ERROR,
+} from "../constants/response/httpStatusCode";
+import SUCCESS_MESSAGES from "../constants/response/successMessages";
+import ERROR_MESSAGES from "../constants/response/errorMessages";
 
-    const student = createUser({
-      name: name,
-      age: age,
-      isActive: isActive,
-    });
-    response.response({
-      res,
-      data: student,
-      success: true,
-      statusCode: 201,
-      message: "Student Created Successfully",
-    });
-  } catch (error) {
-    if (error instanceof zod.ZodError) {
-      return response.response({
-        res,
-        statusCode: 400,
-        data: JSON.parse(error as unknown as  string),
+export class StudentController {
+  static async createStudent(
+req: CreateStudentsRequest,
+    res: Response
+  ): Promise<void> {
+    try {
+      const student = StudentService.createStudent(req.body);
+
+      res.status(HTTP_CREATED).json({
+        status: "success",
+        message: SUCCESS_MESSAGES.STUDENT_CREATED,
+        data: student,
+      });
+    } catch (error: any) {
+      res.status(HTTP_BAD_REQUEST).json({
+        status: "error",
+        message: error.message || ERROR_MESSAGES.STUDENT.FAILED_TO_CREATE,
       });
     }
-    console.log(error);
-    const { message, stack } = error as Error;
-    response.response({
-      res,
-      statusCode: 500,
-      message,
-      error: stack,
-    });
-    res.status(500).json({
-      message,
-      stack,
-    });
-  }
-};
-
-export const getAllStudents = (req: Request, res: Response) => {
-  response.response<StudentInterface[]>({
-    res,
-    data: getAllUser(),
-    message: "fetched well",
-  });
-};
-export const getStudent = (req: GetStudentIdParamsReq, res: Response) => {
-  const { studentId } = req.params;
-
-  const studentDetails = findUser({ userId: studentId });
-  if (!studentDetails) {
-    res.status(404).json({
-      message: "Student Not Found",
-    });
   }
 
-  res.status(200).json({
-    message: "student Fetched well",
-    data: studentDetails,
-  });
-};
+  static async getAllStudents(req: Request, res: Response): Promise<void> {
+    try {
+      const students = StudentService.getAllStudents();
+
+      res.status(HTTP_OK).json({
+        status: "success",
+        message: SUCCESS_MESSAGES.STUDENT_RETRIEVED,
+        data: students,
+      });
+    } catch (error: any) {
+      res.status(HTTP_SERVER_ERROR).json({
+        status: "error",
+        message: error.message || ERROR_MESSAGES.STUDENT.FAILED_TO_RETRIEVE,
+      });
+    }
+  }
+
+  static async getStudent(
+    req: GetStudentIdParamsReq,
+    res: Response
+  ): Promise<void> {
+    try {
+      const { studentId } = req.params;
+
+      const student = StudentService.getStudentById(studentId);
+
+      if (!student) {
+        res.status(HTTP_NOT_FOUND).json({
+          status: "error",
+          message: ERROR_MESSAGES.STUDENT.NOT_FOUND,
+        });
+        return;
+      }
+
+      res.status(HTTP_OK).json({
+        status: "success",
+        message: SUCCESS_MESSAGES.STUDENT_FETCHED,
+        data: student,
+      });
+    } catch (error: any) {
+      res.status(HTTP_SERVER_ERROR).json({
+        status: "error",
+        message: error.message || ERROR_MESSAGES.STUDENT.FAILED_TO_RETRIEVE,
+      });
+    }
+  }
+}

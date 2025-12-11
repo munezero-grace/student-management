@@ -1,21 +1,16 @@
 import { AttendanceInterface } from "../types";
 import { database, writeFile } from "../database";
+import { v4 as uuidv4 } from "uuid";
 
-export const createAttendance = ({
-  studentId,
-  date,
-  status,
-}: {
-  studentId: string;
-  date: string;
-  status: "present" | "absent";
-}): AttendanceInterface => {
+export const createAttendance = (
+  attendanceData: Partial<AttendanceInterface>
+): AttendanceInterface => {
   const db = JSON.parse(database());
   const newAttendance: AttendanceInterface = {
-    id: String(db.attendances.length + 1),
-    studentId,
-    date,
-    status,
+    id: uuidv4(),
+    studentId: attendanceData.studentId!,
+    date: attendanceData.date!,
+    status: attendanceData.status!,
     createdAt: new Date(),
   };
   db.attendances.push(newAttendance);

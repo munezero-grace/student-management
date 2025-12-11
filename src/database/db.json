@@ -51,6 +51,56 @@
       "email": "email@gmail.com",
       "password": "password123",
       "createdAt": "2025-12-11T00:00:00.000Z"
+    },
+    {
+      "id": "3be20abc-1007-422b-b5f2-a82cc70236a3",
+      "name": "Add your name in the body",
+      "email": "aaa@gmail.com",
+      "password": "password123",
+      "createdAt": "2025-12-11T10:30:45.562Z",
+      "updatedAt": "2025-12-11T14:59:56.260Z"
+    },
+    {
+      "id": "2be3548b-d936-4b4b-a93c-da5e712075a8",
+      "name": "bbb",
+      "email": "bbb@gmail.com",
+      "password": "password123",
+      "createdAt": "2025-12-11T10:30:57.399Z"
+    },
+    {
+      "id": "b85dcf55-662f-42fa-b885-1abeaa3eaf1b",
+      "name": "ccc",
+      "email": "ccc@gmail.com",
+      "password": "password123",
+      "createdAt": "2025-12-11T10:31:06.775Z"
+    },
+    {
+      "id": "8b2bab6e-5234-4597-ba5f-ef1e23bb42ac",
+      "name": "ddd",
+      "email": "ddd@gmail.com",
+      "password": "password123",
+      "createdAt": "2025-12-11T10:31:17.953Z"
+    },
+    {
+      "id": "b99887e6-2db7-4232-a937-fb0b743cc675",
+      "name": "eee",
+      "email": "eee@gmail.com",
+      "password": "password123",
+      "createdAt": "2025-12-11T10:31:26.146Z"
+    },
+    {
+      "id": "de49815f-1c1f-42c7-8076-cf78c5a3e355",
+      "name": "fff",
+      "email": "fff@gmail.com",
+      "password": "password123",
+      "createdAt": "2025-12-11T10:31:37.313Z"
+    },
+    {
+      "id": "7b4bce9f-982d-46bf-8798-779240b79053",
+      "name": "ggg",
+      "email": "ggg@gmail.com",
+      "password": "password123",
+      "createdAt": "2025-12-11T10:31:45.940Z"
     }
   ]
 }
