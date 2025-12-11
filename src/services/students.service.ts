@@ -1,41 +1,116 @@
 import { StudentInterface } from "../types";
 import { database, writeFile } from "../database";
-export const createUser = ({
-  name,
-  age,
-  isActive,
-}: {
-  name: string;
-  age: number;
-  isActive: boolean;
-}): StudentInterface => {
-  const studentTable = JSON.parse(database());
-  const index = (studentTable?.students.length + 1).toString();
-  studentTable.students.push({
-    id: index,
-    name,
-    age,
-    isActive,
-    createdAt: new Date(),
-  });
-  writeFile(studentTable);
-  return studentTable.students[Number(index)];
-};
-export const getAllUser = (): StudentInterface[] => {
-  const studentTable = JSON.parse(database());
-  const students = studentTable["students"] as StudentInterface[];
-  return students;
-};
-export const findUser = ({
-  userId,
-}: {
-  userId: string;
-}): StudentInterface | boolean => {
-  const studentTable = JSON.parse(database());
-  const students = studentTable["students"] as StudentInterface[];
-  const studentIndex = students.findIndex((va) => va.id == userId);
-  if (studentIndex === -1) {
-    return false;
+import { v4 as uuidv4 } from "uuid";
+
+export class StudentService {
+  static createStudent(userData: Partial<StudentInterface>): StudentInterface {
+    try {
+      const db = JSON.parse(database());
+
+      const newStudent: StudentInterface = {
+        id: uuidv4(),
+        name: userData.name!,
+        age: userData.age!,
+        isActive: userData.isActive!,
+        createdAt: new Date(),
+      };
+
+      db.students.push(newStudent);
+      writeFile(db);
+
+      return newStudent;
+    } catch (error: any) {
+      throw new Error(error.message || "Failed to create student");
+    }
   }
-  return students[studentIndex];
-};
+
+  static getAllStudents(): StudentInterface[] {
+    try {
+      const db = JSON.parse(database());
+      return db.students || [];
+    } catch (error) {
+      throw new Error("Failed to retrieve students");
+    }
+  }
+
+  static getStudentById(studentId: string): StudentInterface | null {
+    try {
+      const db = JSON.parse(database());
+      const student = db.students.find(
+        (student: StudentInterface) => student.id === studentId
+      );
+      return student || null;
+    } catch (error) {
+      throw new Error("Failed to retrieve student");
+    }
+  }
+
+  static updateStudent(
+    studentId: string,
+    updateData: Partial<StudentInterface>
+  ): StudentInterface | null {
+    try {
+      const db = JSON.parse(database());
+      const studentIndex = db.students.findIndex(
+        (student: StudentInterface) => student.id === studentId
+      );
+
+      if (studentIndex === -1) {
+        return null;
+      }
+
+      const updatedStudent = {
+        ...db.students[studentIndex],
+        ...updateData,
+        updatedAt: new Date(),
+      };
+
+      db.students[studentIndex] = updatedStudent;
+      writeFile(db);
+
+      return updatedStudent;
+    } catch (error: any) {
+      throw new Error(error.message || "Failed to update student");
+    }
+  }
+
+  static deleteStudent(studentId: string): boolean {
+    try {
+      const db = JSON.parse(database());
+      const studentIndex = db.students.findIndex(
+        (student: StudentInterface) => student.id === studentId
+      );
+
+      if (studentIndex === -1) {
+        return false;
+      }
+
+      db.students.splice(studentIndex, 1);
+      writeFile(db);
+
+      return true;
+    } catch (error) {
+      throw new Error("Failed to delete student");
+    }
+  }
+
+  static getStudentByName(name: string): StudentInterface | null {
+    try {
+      const db = JSON.parse(database());
+      const student = db.students.find(
+        (student: StudentInterface) => student.name === name
+      );
+      return student || null;
+    } catch (error) {
+      throw new Error("Failed to retrieve student");
+    }
+  }
+}
+
+export const createUser = (userData: Partial<StudentInterface>) =>
+  StudentService.createStudent(userData);
+
+export const getAllUser = () => StudentService.getAllStudents();
+
+export const findUser = (userId: string) =>
+  StudentService.getStudentById(userId);

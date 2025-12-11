@@ -5,21 +5,30 @@ import {
   UpdateUserRequest,
 } from "../types/user.interface";
 import { UserService } from "../services/user.service";
+import { ERROR_MESSAGES } from "../constants/response/errorMessages";
+import { SUCCESS_MESSAGES } from "../constants/response/successMessages";
+import {
+  HTTP_BAD_REQUEST,
+  HTTP_CREATED,
+  HTTP_NOT_FOUND,
+  HTTP_OK,
+  HTTP_SERVER_ERROR,
+} from "../constants/response/httpStatusCode";
 
 export class UserController {
   static async getAllUsers(req: any, res: Response): Promise<void> {
     try {
       const users = UserService.getAllUsers();
 
-      res.status(200).json({
+      res.status(HTTP_OK).json({
         status: "success",
-        message: "Users retrieved successfully",
+        message: SUCCESS_MESSAGES.USER_RETRIEVED,
         data: users,
       });
     } catch (error: any) {
-      res.status(500).json({
+      res.status(HTTP_SERVER_ERROR).json({
         status: "error",
-        message: error.message || "Failed to retrieve users",
+        message: error.message || ERROR_MESSAGES.USER.FAILED_TO_RETRIEVE,
       });
     }
   }
@@ -34,25 +43,26 @@ export class UserController {
       const user = UserService.getUserById(userId);
 
       if (!user) {
-        res.status(404).json({
+        res.status(HTTP_NOT_FOUND).json({
           status: "error",
-          message: "User not found",
+          message: ERROR_MESSAGES.USER.NOT_FOUND,
         });
         return;
       }
 
-      res.status(200).json({
+      res.status(HTTP_OK).json({
         status: "success",
-        message: "User retrieved successfully",
+        message: SUCCESS_MESSAGES.USER_RETRIEVED_SINGLE,
         data: user,
       });
     } catch (error: any) {
-      res.status(500).json({
+      res.status(HTTP_SERVER_ERROR).json({
         status: "error",
-        message: error.message || "Failed to retrieve user",
+        message: error.message || ERROR_MESSAGES.USER.FAILED_TO_RETRIEVE_SINGLE,
       });
     }
   }
+
 
   static async createUser(
     req: CreateUserRequest,
@@ -61,15 +71,15 @@ export class UserController {
     try {
       const newUser = UserService.createUser(req.body);
 
-      res.status(201).json({
+      res.status(HTTP_CREATED).json({
         status: "success",
-        message: "User created successfully",
+        message: SUCCESS_MESSAGES.USER_CREATED,
         data: newUser,
       });
     } catch (error: any) {
-      res.status(400).json({
+      res.status(HTTP_BAD_REQUEST).json({
         status: "error",
-        message: error.message || "Failed to create user",
+        message: error.message || ERROR_MESSAGES.USER.FAILED_TO_CREATE,
       });
     }
   }
@@ -83,26 +93,25 @@ export class UserController {
       const updatedUser = UserService.updateUser(userId, req.body);
 
       if (!updatedUser) {
-        res.status(404).json({
+        res.status(HTTP_NOT_FOUND).json({
           status: "error",
-          message: "User not found",
+          message: ERROR_MESSAGES.USER.NOT_FOUND,
         });
         return;
       }
 
-      res.status(200).json({
+      res.status(HTTP_OK).json({
         status: "success",
-        message: "User updated successfully",
+        message: SUCCESS_MESSAGES.USER_UPDATED,
         data: updatedUser,
       });
     } catch (error: any) {
-      res.status(400).json({
+      res.status(HTTP_BAD_REQUEST).json({
         status: "error",
-        message: error.message || "Failed to update user",
+        message: error.message || ERROR_MESSAGES.USER.FAILED_TO_UPDATE,
       });
     }
   }
-
 
   static async deleteUser(
     req: GetUserIdParamsReq,
@@ -114,21 +123,21 @@ export class UserController {
       const deleted = UserService.deleteUser(userId);
 
       if (!deleted) {
-        res.status(404).json({
+        res.status(HTTP_NOT_FOUND).json({
           status: "error",
-          message: "User not found",
+          message: ERROR_MESSAGES.USER.NOT_FOUND,
         });
         return;
       }
 
-      res.status(200).json({
+      res.status(HTTP_OK).json({
         status: "success",
-        message: "User deleted successfully",
+        message: SUCCESS_MESSAGES.USER_DELETED,
       });
     } catch (error: any) {
-      res.status(500).json({
+      res.status(HTTP_SERVER_ERROR).json({
         status: "error",
-        message: error.message || "Failed to delete user",
+        message: error.message || ERROR_MESSAGES.USER.FAILED_TO_DELETE,
       });
     }
   }
