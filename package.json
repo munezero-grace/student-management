@@ -15,17 +15,21 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ./server.ts",
-    "build":"tsc ./server.ts",
-    "start":"node ./dist/server.js"
+    "dev": "ts-node src/server.ts",
+    "dev:watch": "nodemon --exec ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node ./dist/src/server.js"
   },
   "dependencies": {
     "@types/express": "^5.0.6",
+    "@types/uuid": "^10.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "helmet": "^8.1.0",
-    "typescript": "^5.9.3"
+    "joi": "^18.0.2",
+    "typescript": "^5.9.3",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

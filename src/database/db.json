@@ -1,0 +1,56 @@
+{
+  "students": [
+    {
+      "id": "1",
+      "name": "fab. nj",
+      "age": 49,
+      "isActive": true,
+      "createdAt": "2025-12-09T08:17:06.688Z"
+    },
+    {
+      "id": "2",
+      "name": "fab. nj",
+      "age": 49,
+      "isActive": true,
+      "createdAt": "2025-12-09T08:17:12.842Z"
+    },
+    {
+      "id": "3",
+      "name": "fab. nj",
+      "age": 49,
+      "isActive": true,
+      "createdAt": "2025-12-09T08:18:56.134Z"
+    },
+    {
+      "id": "4",
+      "name": "fab. nj",
+      "age": 49,
+      "isActive": true,
+      "createdAt": "2025-12-10T08:42:37.081Z"
+    },
+    {
+      "id": "5",
+      "name": "fab. nj",
+      "age": 49,
+      "isActive": true,
+      "createdAt": "2025-12-10T08:46:40.261Z"
+    },
+    {
+      "id": "6",
+      "name": "fab. nj",
+      "age": 49,
+      "isActive": true,
+      "createdAt": "2025-12-10T08:47:25.982Z"
+    }
+  ],
+  "attendances": [],
+  "users": [
+    {
+      "id": "id1",
+      "name": "john doe",
+      "email": "email@gmail.com",
+      "password": "password123",
+      "createdAt": "2025-12-11T00:00:00.000Z"
+    }
+  ]
+}
