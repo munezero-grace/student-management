@@ -1,17 +1,11 @@
 import express, { Router } from "express";
-import { StudentController } from "../controllers/studentController";
-import { validate } from "../middleware/validation";
-import { studentSchema } from "../validations/student.validation";
+import { createStudent, getAllStudents, getStudent } from "../controllers";
 
-const studentRouter: Router = express.Router();
+const studentRouter: Router = express().router;
 
-studentRouter.post(
-  "/students",
-  validate(studentSchema, "body"),
-  StudentController.createStudent
-);
+studentRouter.post("/students", createStudent);
 
-studentRouter.get("/students", StudentController.getAllStudents);
-studentRouter.get("/students/:studentId", StudentController.getStudent);
+studentRouter.get("/students", getAllStudents);
+studentRouter.get("/students/:studentId", getStudent);
 
 export { studentRouter };

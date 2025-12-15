@@ -1,28 +1,34 @@
+import joi, { ObjectSchema } from "joi";
 import { Request, Response, NextFunction } from "express";
-import { ObjectSchema } from "joi";
-import { HTTP_BAD_REQUEST } from "../constants/response/httpStatusCode";
+import { ResponseService } from "../utils";
+const responseService = new ResponseService();
 
-export type ValidationSource = "body" | "query" | "params";
+export enum Type {
+  BODY = "body",
+  PARAMS = "params",
+  QUERY = "query",
+}
 
-export function validate(
-  schema: ObjectSchema,
-  source: ValidationSource = "body"
-) {
+interface JoiRequestType<T> {
+  schema: ObjectSchema<T>;
+  type: Type;
+}
+
+export const validationMiddleware = <T>({
+  schema,
+  type,
+}: JoiRequestType<T>) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const data = req[source];
-
-    const { error, value } = schema.validate(data);
-
-    if (error) {
-      const messages = error.details.map((detail: any) => detail.message);
-      return res.status(HTTP_BAD_REQUEST).json({
-        status: "error",
-        message: "Validation failed",
-        errors: messages,
+    const data = req[type];
+    const validates = schema.validate(data);
+    if (validates.error) {
+      responseService.response({
+        res,
+        statusCode: 400,
+        data: validates.error.details,
+        success: false,
       });
     }
-
-    req[source] = value;
     next();
   };
-}
+};
