@@ -2,30 +2,32 @@ import { UserInterface } from "../types";
 import { UserModal } from "../models";
 
 export class UserService {
-  userExists = async (email: string): Promise<boolean> => {
-    const userExist = await UserModal.exists({ email });
-    return !!userExist;
-  };
+  async userExists(email: string): Promise<boolean> {
+    const exists = await UserModal.exists({ email });
+    return !!exists;
+  }
 
-  createUser = async (user: UserInterface) => {
-    const newUser = await UserModal.create({ ...user });
-    await newUser.save();
+  async createUser(user: UserInterface) {
+    // ✅ create() already saves
+    const newUser = await UserModal.create(user);
 
-    const obj = newUser.toObject ? newUser.toObject() : newUser;
-    if (obj.password) delete obj.password;
+    // Convert to plain object so we can safely remove password
+    const obj = newUser.toObject();
+    delete (obj as any).password;
+
     return obj;
-  };
+  }
 
-  getAllUsers = async () => {
-    const alluser = await UserModal.find().select("-password").exec();
-    return alluser;
-  };
+  async getAllUsers() {
+    return UserModal.find().select("-password").exec();
+  }
 
   async getUser({ email }: { email: string }) {
-    return await UserModal.findOne({ email }).exec();
+    // ✅ returns password too (needed for login compare)
+    return UserModal.findOne({ email }).exec();
   }
 
   async getUserById(id: string) {
-    return await UserModal.findById(id).exec();
+    return UserModal.findById(id).select("-password").exec(); // ✅ safer default
   }
 }

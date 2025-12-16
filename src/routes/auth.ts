@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 
-import { LoginValidation } from "../schemas";
-import { Type, validationMiddleware } from "../middlewares";
+import { LoginValidation } from "../validations/auth.validation";
+import { Type, validationMiddleware } from "../middleware";
 import { AuthController } from "../controllers/authController";
 const authController = new AuthController();
 const authRoute: Router = express.Router();

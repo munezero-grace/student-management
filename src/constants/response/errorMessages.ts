@@ -21,6 +21,13 @@ export const ERROR_MESSAGES = {
     FAILED_TO_CREATE: "Failed to create attendance record",
     FAILED_TO_RETRIEVE: "Failed to retrieve attendance records",
     FAILED_TO_RETRIEVE_SINGLE: "Failed to retrieve attendance record",
+    FAILED_TO_UPDATE: "Failed to update attendance",
+  },
+
+  LEAVE: {
+    NOT_FOUND: "Leave request not found",
+    FAILED_TO_CREATE: "Failed to create leave request",
+    FAILED_TO_RETRIEVE: "Failed to retrieve leave requests",
   },
 
   VALIDATION: {
