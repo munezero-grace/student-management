@@ -1,9 +1,14 @@
-import express, { Router } from "express";
+import express from "express";
 import { studentRouter } from "./students";
-import { userRoute } from "./user";
+import { userRoute } from "./users";
 import { authRoute } from "./auth";
+import { attendanceRouter } from "./attendance";
 
-const routes: Router[] = [studentRouter, userRoute, authRoute];
-const mainRouter = express();
-mainRouter.use(routes);
+const mainRouter = express.Router();
+
+mainRouter.use(studentRouter);
+mainRouter.use(userRoute);
+mainRouter.use(authRoute);
+mainRouter.use(attendanceRouter);
+
 export { mainRouter };

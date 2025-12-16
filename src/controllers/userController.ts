@@ -1,88 +1,62 @@
 import { Request, Response } from "express";
-import { CreateUserRequest } from "../types/user.interface";
-import { hashPassword } from "../utils/lib";
-import { ResponseService } from "../utils/response";
 import { UserService } from "../services";
-import { AuthRequestInterface } from "../middleware/authMiddleware";
+import { ResponseService } from "../utils/response";
 
-const responseService = new ResponseService();
 const userService = new UserService();
+const responseService = new ResponseService();
 
 export class UserController {
-  public async createUser(req: CreateUserRequest, res: Response) {
+  static async createUser(req: Request, res: Response) {
     try {
-      const { email, name, gender, isActive, password } = req.body as any;
-      const userExist = await userService.userExists(email);
-      if (userExist) {
-        return responseService.response({
-          res,
-          message: "user Already Exists",
-          statusCode: 400,
-        });
-      }
-      const newUser = await userService.createUser({
-        email,
-        name,
-        gender,
-        isActive,
-        password: hashPassword(password),
-        role: "user",
-      } as any);
-
+      const user = await userService.createUser(req.body);
       return responseService.response({
         res,
         statusCode: 201,
-        message: "User Created Successfully",
-        success: true,
-        data: newUser,
+        message: "User created",
+        data: user,
       });
-    } catch (err) {
-      const { message, stack } = err as Error;
-      responseService.response({
+    } catch (error: any) {
+      return responseService.response({
         res,
-        data: stack,
-        message,
-        statusCode: 500,
+        statusCode: 400,
+        message: error.message,
       });
     }
   }
 
-  public async getAllUsers(req: Request, res: Response) {
+  static async getAllUsers(req: Request, res: Response) {
     try {
       const users = await userService.getAllUsers();
       return responseService.response({
         res,
-        message: "all Users",
-        success: true,
+        statusCode: 200,
+        message: "Users retrieved",
         data: users,
       });
-    } catch (error) {
-      const { message, stack } = error as Error;
+    } catch (error: any) {
       return responseService.response({
         res,
-        data: stack,
-        message,
         statusCode: 500,
+        message: error.message,
       });
     }
   }
 
-  public async UserProfile(req: AuthRequestInterface, res: Response) {
+  static async UserProfile(req: any, res: Response) {
     try {
-      const user = req?.user;
-      const userDetails = await userService.getUserById(user?.sub as string);
+      const userId = req.user?.id;
+      const user = await userService.getUserById(userId);
       return responseService.response({
         res,
-        data: userDetails,
-        message: "UserFetched",
+        statusCode: 200,
+        message: "Profile retrieved",
+        data: user,
       });
-    } catch (error) {
-      const { message, stack } = error as Error;
-      responseService.response({
+    } catch (error: any) {
+      return responseService.response({
         res,
-        data: stack,
-        message,
         statusCode: 500,
+        message: error.message,
       });
     }
   }
