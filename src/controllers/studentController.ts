@@ -1,9 +1,5 @@
 import { Request, Response } from "express";
-import {
-  CreateStudentsRequest,
-  GetStudentIdParamsReq,
-  StudentInterface,
-} from "../types";
+import { CreateStudentsRequest, GetStudentIdParamsReq } from "../types";
 import { StudentService } from "../services/students.service";
 import {
   HTTP_BAD_REQUEST,
@@ -17,11 +13,11 @@ import ERROR_MESSAGES from "../constants/response/errorMessages";
 
 export class StudentController {
   static async createStudent(
-req: CreateStudentsRequest,
+    req: CreateStudentsRequest,
     res: Response
   ): Promise<void> {
     try {
-      const student = StudentService.createStudent(req.body);
+      const student = await StudentService.createStudent(req.body);
 
       res.status(HTTP_CREATED).json({
         status: "success",
@@ -38,7 +34,7 @@ req: CreateStudentsRequest,
 
   static async getAllStudents(req: Request, res: Response): Promise<void> {
     try {
-      const students = StudentService.getAllStudents();
+      const students = await StudentService.getAllStudents();
 
       res.status(HTTP_OK).json({
         status: "success",
@@ -60,7 +56,7 @@ req: CreateStudentsRequest,
     try {
       const { studentId } = req.params;
 
-      const student = StudentService.getStudentById(studentId);
+      const student = await StudentService.getStudentById(studentId);
 
       if (!student) {
         res.status(HTTP_NOT_FOUND).json({

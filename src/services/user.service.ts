@@ -1,5 +1,6 @@
 import { UserInterface } from "../types";
 import { UserModel } from "../models";
+import { hashPassword } from "../utils/lib";
 
 export class UserService {
   async userExists(email: string): Promise<boolean> {
@@ -8,10 +9,15 @@ export class UserService {
   }
 
   async createUser(user: UserInterface) {
-    // ✅ create() already saves
-    const newUser = await UserModel.create(user);
+    const hashedPassword = await hashPassword(user.password);
 
-    // Convert to plain object so we can safely remove password
+    const newUser = await UserModel.create({
+      ...user,
+      email: user.email.toLowerCase().trim(),
+      role: "user",
+      password: hashedPassword,
+    });
+
     const obj = newUser.toObject();
     delete (obj as any).password;
 
@@ -21,13 +27,13 @@ export class UserService {
   async getAllUsers() {
     return UserModel.find().select("-password").exec();
   }
-
   async getUser({ email }: { email: string }) {
-    // ✅ returns password too (needed for login compare)
-    return UserModel.findOne({ email }).exec();
+    return UserModel.findOne({ email: email.toLowerCase().trim() })
+      .select("+password")
+      .exec();
   }
 
   async getUserById(id: string) {
-    return UserModel.findById(id).select("-password").exec(); // ✅ safer default
+    return UserModel.findById(id).select("-password").exec();
   }
 }

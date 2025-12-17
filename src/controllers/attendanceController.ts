@@ -23,9 +23,6 @@ import {
 import SUCCESS_MESSAGES from "../constants/response/successMessages";
 import ERROR_MESSAGES from "../constants/response/errorMessages";
 
-/**
- * ADMIN: Create attendance record
- */
 export const createAttendanceRecord = async (req: Request, res: Response) => {
   try {
     const { studentId, date, status } = req.body;
@@ -52,9 +49,6 @@ export const createAttendanceRecord = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * ADMIN: Get all attendance records
- */
 export const getAllAttendanceRecords = async (req: Request, res: Response) => {
   try {
     const attendances = await getAllAttendances();
@@ -72,9 +66,6 @@ export const getAllAttendanceRecords = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * ADMIN: Get one attendance record by ID
- */
 export const getAttendanceRecordById = async (req: Request, res: Response) => {
   try {
     const { attendanceId } = req.params;
@@ -101,16 +92,12 @@ export const getAttendanceRecordById = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * USER/STUDENT: Get my attendance records
- * (Uses req.user.id from authMiddleware)
- */
 export const getMyAttendanceRecords = async (
   req: AuthRequestInterface,
   res: Response
 ) => {
   try {
-    const userId = req.user?.id; // ✅ standardize to id
+    const userId = req.user?.id;
     if (!userId) {
       return res.status(HTTP_BAD_REQUEST).json({
         status: "error",
@@ -133,9 +120,6 @@ export const getMyAttendanceRecords = async (
   }
 };
 
-/**
- * ADMIN: Update attendance record by ID
- */
 export const updateAttendanceRecord = async (req: Request, res: Response) => {
   try {
     const { attendanceId } = req.params;
@@ -163,9 +147,6 @@ export const updateAttendanceRecord = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * ADMIN: Soft delete attendance record by ID
- */
 export const deleteAttendanceRecord = async (req: Request, res: Response) => {
   try {
     const { attendanceId } = req.params;
@@ -192,15 +173,12 @@ export const deleteAttendanceRecord = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * USER/STUDENT: Submit leave request
- */
 export const submitLeaveRequest = async (
   req: AuthRequestInterface,
   res: Response
 ) => {
   try {
-    const userId = req.user?.id; // ✅ standardize to id
+    const userId = req.user?.id;
     const { date, reason } = req.body;
 
     if (!userId || !date) {
@@ -229,10 +207,10 @@ export const submitLeaveRequest = async (
   }
 };
 
-/**
- * ADMIN: Get all leave requests
- */
-export const getAllLeaveRequestsHandler = async (req: Request, res: Response) => {
+export const getAllLeaveRequestsHandler = async (
+  req: Request,
+  res: Response
+) => {
   try {
     const leaves = await getAllLeaveRequests();
 
@@ -249,15 +227,12 @@ export const getAllLeaveRequestsHandler = async (req: Request, res: Response) =>
   }
 };
 
-/**
- * USER/STUDENT: Get my leave requests
- */
 export const getMyLeaveRequestsHandler = async (
   req: AuthRequestInterface,
   res: Response
 ) => {
   try {
-    const userId = req.user?.id; // ✅ standardize to id
+    const userId = req.user?.id;
     if (!userId) {
       return res
         .status(HTTP_BAD_REQUEST)
@@ -279,9 +254,6 @@ export const getMyLeaveRequestsHandler = async (
   }
 };
 
-/**
- * ADMIN: Approve leave request
- */
 export const approveLeaveRequestHandler = async (
   req: AuthRequestInterface,
   res: Response
@@ -289,7 +261,7 @@ export const approveLeaveRequestHandler = async (
   try {
     const { leaveId } = req.params;
 
-    const updated = await svcApproveLeaveRequest(leaveId); // ✅ no adminId needed
+    const updated = await svcApproveLeaveRequest(leaveId);
 
     if (!updated) {
       return res.status(HTTP_NOT_FOUND).json({
@@ -311,9 +283,6 @@ export const approveLeaveRequestHandler = async (
   }
 };
 
-/**
- * ADMIN: Reject leave request
- */
 export const rejectLeaveRequestHandler = async (
   req: AuthRequestInterface,
   res: Response
@@ -321,7 +290,7 @@ export const rejectLeaveRequestHandler = async (
   try {
     const { leaveId } = req.params;
 
-    const updated = await svcRejectLeaveRequest(leaveId); // ✅ no adminId needed
+    const updated = await svcRejectLeaveRequest(leaveId);
 
     if (!updated) {
       return res.status(HTTP_NOT_FOUND).json({

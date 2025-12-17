@@ -1,6 +1,4 @@
-import { generateToken } from "../utils/lib";
-
-export type JwtRole = "admin" | "user" | "student";
+import { generateToken, JwtRole } from "../utils/lib";
 
 export interface LoginTokenPayload {
   id: string;
@@ -9,10 +7,6 @@ export interface LoginTokenPayload {
 
 export class AuthService {
   async loginService(user: LoginTokenPayload): Promise<string> {
-    // Keep the token payload small and consistent across the app
-    return generateToken({
-      id: user.id,
-      role: user.role,
-    });
+    return generateToken({ id: user.id, role: user.role });
   }
 }

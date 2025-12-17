@@ -17,16 +17,27 @@ export const UserSchemaValidation = Joi.object({
     "any.required": "Password is required",
   }),
 
-  role: Joi.string().valid("admin", "user", "student").default("user"),
+  gender: Joi.string().valid("male", "female", "other").optional(),
+
+  isActive: Joi.forbidden(),
+
+  role: Joi.forbidden(),
 });
 
 export const updateUserSchema = Joi.object({
   name: Joi.string().trim().min(2).optional(),
+
   email: Joi.string().email().optional().messages({
     "string.email": "Please provide a valid email",
   }),
+
   password: Joi.string().min(6).optional().messages({
     "string.min": "Password must be at least 6 characters",
   }),
-  role: Joi.string().valid("admin", "user", "student").optional(),
+
+  gender: Joi.string().valid("male", "female", "other").optional(),
+
+  isActive: Joi.boolean().optional(),
+
+  role: Joi.forbidden(),
 });

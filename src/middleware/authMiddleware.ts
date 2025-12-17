@@ -1,18 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { ResponseService } from "../utils/response";
-import { validateToken } from "../utils/lib";
+import { validateToken, JwtPayloadShape } from "../utils/lib";
 
 const responseService = new ResponseService();
 
-export interface UserDetails {
-  id: string;
-  role: "admin" | "user" | "student";
-  iat?: number;
-  exp?: number;
-}
-
 export interface AuthRequestInterface extends Request {
-  user?: UserDetails;
+  user?: JwtPayloadShape;
 }
 
 export const authMiddleware = (
@@ -41,11 +34,9 @@ export const authMiddleware = (
       });
     }
 
-    // ✅ validate & decode token
     const decoded = validateToken(token);
 
-    // ✅ strict, simple, consistent
-    if (!decoded.id || !decoded.role) {
+    if (!decoded?.id || !decoded?.role) {
       return responseService.response({
         res,
         statusCode: 401,
@@ -53,17 +44,14 @@ export const authMiddleware = (
       });
     }
 
-    req.user = {
-      id: decoded.id,
-      role: decoded.role,
-    };
-
+    req.user = decoded;
     return next();
   } catch (error: any) {
     return responseService.response({
       res,
       statusCode: 401,
-      message: error?.message || "unauthorized actions",
+      message: "unauthorized actions",
+      data: error?.message,
     });
   }
 };

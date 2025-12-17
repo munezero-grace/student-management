@@ -45,7 +45,6 @@ export const approveLeaveRequest = async (leaveId: string) => {
   leave.decidedAt = new Date();
   await leave.save();
 
-  // find attendance on the same day
   const start = new Date(leave.date);
   start.setHours(0, 0, 0, 0);
 

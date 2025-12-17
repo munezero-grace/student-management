@@ -20,8 +20,8 @@ export const validationMiddleware = <T>({ schema, type }: JoiRequestType<T>) => 
     const data = req[type];
 
     const { error, value } = schema.validate(data, {
-      abortEarly: false,      // ✅ show all errors, not only first
-      stripUnknown: true,     // ✅ removes fields you didn’t define in schema
+      abortEarly: false,
+      stripUnknown: true,
     });
 
     if (error) {
@@ -34,7 +34,6 @@ export const validationMiddleware = <T>({ schema, type }: JoiRequestType<T>) => 
       });
     }
 
-    // ✅ optional: save sanitized value back to request
     (req as any)[type] = value;
 
     return next();

@@ -5,9 +5,15 @@ dotenvConfig();
 
 import { config } from "./config";
 import { mainRouter } from "./routes";
-import { databaseconnection } from "./config/database"; // ✅ adjust to real path
+import { databaseconnection } from "./config/database";
 
 const app = express();
+
+// Crash early if JWT secret is not provided
+if (!config.jwtSecret) {
+  console.error("FATAL: JWT_SECRET is not set. Set JWT_SECRET in environment and restart.");
+  process.exit(1);
+}
 
 app.use(cors());
 app.use(express.json());

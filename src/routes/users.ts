@@ -20,11 +20,6 @@ userRoute.get(
   UserController.getAllUsers
 );
 
-userRoute.get(
-  "/users/profile",
-  authMiddleware,
-  roleMiddleware("all"),
-  UserController.UserProfile
-);
+userRoute.get("/users/profile", authMiddleware, UserController.UserProfile);
 
 export { userRoute };

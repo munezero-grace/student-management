@@ -25,7 +25,6 @@ export const createAttendance = async (payload: {
       notes: payload.notes,
     });
   } catch (err: any) {
-    // only works if you add a UNIQUE index on (student, date)
     if (err?.code === 11000) {
       throw new Error("Attendance for this student and date already exists");
     }

@@ -1,13 +1,13 @@
 import { ResponseService } from "../utils";
 import { AuthRequestInterface } from "./authMiddleware";
 import { Response, NextFunction } from "express";
+import { JwtRole } from "../utils/lib";
 
 const responseService = new ResponseService();
 
-type Role = "admin" | "user" | "student";
-type AllowedRole = Role | "all";
+type Allowed = JwtRole | "all" | JwtRole[];
 
-export const roleMiddleware = (requiredRole: AllowedRole) => {
+export const roleMiddleware = (allowed: Allowed) => {
   return (req: AuthRequestInterface, res: Response, next: NextFunction) => {
     const userRole = req.user?.role;
 
@@ -19,13 +19,20 @@ export const roleMiddleware = (requiredRole: AllowedRole) => {
       });
     }
 
-    // ✅ allow everyone if route is open to all logged-in users
-    if (requiredRole === "all") return next();
+    if (allowed === "all") return next();
 
-    // ✅ treat "student" like "user" for permissions (common pattern)
-    const normalizedRole: Role = userRole === "student" ? "user" : userRole;
+    if (Array.isArray(allowed)) {
+      if (!allowed.includes(userRole)) {
+        return responseService.response({
+          res,
+          message: "Access Denied",
+          statusCode: 403,
+        });
+      }
+      return next();
+    }
 
-    if (normalizedRole !== requiredRole) {
+    if (userRole !== allowed) {
       return responseService.response({
         res,
         message: "Access Denied",

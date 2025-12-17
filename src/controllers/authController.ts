@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { LoginInterface } from "../types";
 import { comparePassword, ResponseService } from "../utils";
-import { AuthService, JwtRole, UserService } from "../services";
+import { AuthService, UserService } from "../services";
+import { JwtRole } from "../utils/lib";
 
 const responseService = new ResponseService();
 const userService = new UserService();
@@ -12,7 +13,6 @@ export class AuthController {
     try {
       const { email, password } = req.body as LoginInterface;
 
-      // basic input guard (optional but good)
       if (!email || !password) {
         return responseService.response({
           res,
@@ -21,8 +21,8 @@ export class AuthController {
         });
       }
 
-      // ✅ one DB call only
-      const user = await userService.getUser({ email });
+      const cleanEmail = String(email).toLowerCase().trim();
+      const user = await userService.getUser({ email: cleanEmail });
 
       if (!user) {
         return responseService.response({
@@ -32,7 +32,6 @@ export class AuthController {
         });
       }
 
-      // ✅ avoid TS errors + avoid runtime crash
       if (!user.password) {
         return responseService.response({
           res,
@@ -51,8 +50,8 @@ export class AuthController {
         });
       }
 
-      // ✅ normalize role (make sure it matches your JwtRole union)
-      const role = (user.role ?? "user") as JwtRole;
+      const role: JwtRole =
+        user.role === "admin" || user.role === "student" ? user.role : "user";
 
       const token = await authService.loginService({
         id: user._id.toString(),

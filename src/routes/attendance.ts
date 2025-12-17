@@ -30,9 +30,19 @@ attendanceRouter.post(
   validationMiddleware({ schema: createAttendanceSchema, type: Type.BODY }),
   createAttendanceRecord
 );
-attendanceRouter.get("/attendance", authMiddleware, roleMiddleware("admin"), getAllAttendanceRecords);
+attendanceRouter.get(
+  "/attendance",
+  authMiddleware,
+  roleMiddleware("admin"),
+  getAllAttendanceRecords
+);
 attendanceRouter.get("/attendance/me", authMiddleware, getMyAttendanceRecords);
-attendanceRouter.get("/attendance/:attendanceId", authMiddleware, roleMiddleware("admin"), getAttendanceRecordById);
+attendanceRouter.get(
+  "/attendance/:attendanceId",
+  authMiddleware,
+  roleMiddleware("admin"),
+  getAttendanceRecordById
+);
 attendanceRouter.put(
   "/attendance/:attendanceId",
   authMiddleware,
@@ -40,18 +50,41 @@ attendanceRouter.put(
   validationMiddleware({ schema: updateAttendanceSchema, type: Type.BODY }),
   updateAttendanceRecord
 );
-attendanceRouter.delete("/attendance/:attendanceId", authMiddleware, roleMiddleware("admin"), deleteAttendanceRecord);
+attendanceRouter.delete(
+  "/attendance/:attendanceId",
+  authMiddleware,
+  roleMiddleware("admin"),
+  deleteAttendanceRecord
+);
 
-// Leave / absence routes
 attendanceRouter.post(
   "/attendance/leave",
   authMiddleware,
   validationMiddleware({ schema: leaveSchema, type: Type.BODY }),
   submitLeaveRequest
 );
-attendanceRouter.get("/attendance/leave", authMiddleware, roleMiddleware("admin"), getAllLeaveRequestsHandler);
-attendanceRouter.get("/attendance/leave/me", authMiddleware, getMyLeaveRequestsHandler);
-attendanceRouter.put("/attendance/leave/:leaveId/approve", authMiddleware, roleMiddleware("admin"), approveLeaveRequestHandler);
-attendanceRouter.put("/attendance/leave/:leaveId/reject", authMiddleware, roleMiddleware("admin"), rejectLeaveRequestHandler);
+attendanceRouter.get(
+  "/attendance/leave",
+  authMiddleware,
+  roleMiddleware("admin"),
+  getAllLeaveRequestsHandler
+);
+attendanceRouter.get(
+  "/attendance/leave/me",
+  authMiddleware,
+  getMyLeaveRequestsHandler
+);
+attendanceRouter.put(
+  "/attendance/leave/:leaveId/approve",
+  authMiddleware,
+  roleMiddleware("admin"),
+  approveLeaveRequestHandler
+);
+attendanceRouter.put(
+  "/attendance/leave/:leaveId/reject",
+  authMiddleware,
+  roleMiddleware("admin"),
+  rejectLeaveRequestHandler
+);
 
 export { attendanceRouter };

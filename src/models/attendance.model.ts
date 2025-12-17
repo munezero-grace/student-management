@@ -30,7 +30,6 @@ const AttendanceSchema = new Schema<IAttendance>(
   { timestamps: true }
 );
 
-// ensure unique attendance per student + date (ignore soft-deleted records)
 AttendanceSchema.index(
   { student: 1, date: 1 },
   { unique: true, partialFilterExpression: { deletedAt: { $exists: false } } }
